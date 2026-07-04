@@ -1,19 +1,21 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8081';
-
 const api = axios.create({
-  baseURL: BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8081',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Request interceptor — attach JWT to every request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -27,6 +29,7 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
+
     return Promise.reject(error);
   }
 );
