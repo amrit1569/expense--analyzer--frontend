@@ -1,52 +1,42 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081";
+const BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  "http://localhost:8081";
 
 export const register = async (username, email, password) => {
+  const response = await axios.post(
+    `${BASE_URL}/auth/register`,
+    {
+      username,
+      email,
+      password,
+    }
+  );
 
-    const response = await axios.post(
-        `${BASE_URL}/auth/register`,
-        {
-            username,
-            email,
-            password
-        },
-        {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-    );
-
-    return response.data;
+  return response.data;
 };
 
 export const login = async (email, password) => {
+  const response = await axios.post(
+    `${BASE_URL}/auth/login`,
+    {
+      email,
+      password,
+    }
+  );
 
-    const response = await axios.post(
-        `${BASE_URL}/auth/login`,
-        {
-            email,
-            password
-        },
-        {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-    );
+  const token = response.data;
 
-    const token = response.data;
+  localStorage.setItem("token", token);
 
-    localStorage.setItem("token", token);
-
-    return token;
+  return token;
 };
 
 export const logout = () => {
-    localStorage.removeItem("token");
+  localStorage.removeItem("token");
 };
 
 export const isAuthenticated = () => {
-    return localStorage.getItem("token") != null;
+  return localStorage.getItem("token") != null;
 };

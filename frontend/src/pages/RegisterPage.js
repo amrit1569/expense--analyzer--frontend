@@ -36,13 +36,14 @@ export default function RegisterPage() {
 
             setLoading(true);
 
-            await axios.post("http://localhost:8081/auth/register", {
+            const BASE_URL =
+  process.env.REACT_APP_API_URL;
 
-                username: form.username,
-                email: form.email,
-                password: form.password
-
-            });
+await axios.post(`${BASE_URL}/auth/register`, {
+    username: form.username,
+    email: form.email,
+    password: form.password
+});
 
             toast.success("Registration Successful");
 
